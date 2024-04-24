@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 // middleware
@@ -26,10 +26,17 @@ async function run() {
     const coffeCollection = client
       .db("CoffeShop")
       .collection("coffeCollection");
-    // get coffe data from database
+    // get all coffe data from database
     app.get("/coffes", async (req, res) => {
       const cursor = coffeCollection.find();
       const result = await cursor.toArray();
+      res.send(result);
+    });
+    // find single data from database
+    app.get("/coffe/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await coffeCollection.findOne(query);
       res.send(result);
     });
     // send coffe data to database
