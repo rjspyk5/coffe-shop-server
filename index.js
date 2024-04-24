@@ -34,9 +34,27 @@ async function run() {
     });
     // find single data from database
     app.get("/coffe/:id", async (req, res) => {
-      const id = req.params.id;
+      let id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await coffeCollection.findOne(query);
+      res.send(result);
+    });
+    // update a single coffe
+    app.patch("/coffe/:id", async (req, res) => {
+      const id = req.params.id;
+      const data = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          coffeName: data.coffeName,
+        },
+      };
+      const result = await coffeCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
       res.send(result);
     });
     // send coffe data to database
