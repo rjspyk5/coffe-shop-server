@@ -26,6 +26,9 @@ async function run() {
     const coffeCollection = client
       .db("CoffeShop")
       .collection("coffeCollection");
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
     // get all coffe data from database
     app.get("/coffes", async (req, res) => {
       const cursor = coffeCollection.find();
@@ -48,6 +51,7 @@ async function run() {
       const updateDoc = {
         $set: {
           coffeName: data.coffeName,
+          photo: data.photo,
         },
       };
       const result = await coffeCollection.updateOne(
@@ -63,9 +67,13 @@ async function run() {
       const result = await coffeCollection.insertOne(data);
       res.send(result);
     });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+    // Delete data from database
+    app.delete("/coffe/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await coffeCollection.deleteOne(query);
+      res.send(result);
+    });
   } finally {
   }
 }
