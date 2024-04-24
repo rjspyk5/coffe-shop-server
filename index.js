@@ -26,9 +26,20 @@ async function run() {
     const coffeCollection = client
       .db("CoffeShop")
       .collection("coffeCollection");
+    const userCollection = client
+      .db("coffeUserDb")
+      .collection("userCollection");
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
+
+    // put data on userCollection
+    app.post("/users", async (req, res) => {
+      const data = req.body;
+      const result = await userCollection.insertOne(data);
+      res.send(result);
+    });
+
     // get all coffe data from database
     app.get("/coffes", async (req, res) => {
       const cursor = coffeCollection.find();
