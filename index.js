@@ -39,7 +39,12 @@ async function run() {
       const result = await userCollection.insertOne(data);
       res.send(result);
     });
-
+    // get data on userCollection
+    app.get("/users", async (req, res) => {
+      const cursor = userCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
     // get all coffe data from database
     app.get("/coffes", async (req, res) => {
       const cursor = coffeCollection.find();
