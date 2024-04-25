@@ -39,10 +39,17 @@ async function run() {
       const result = await userCollection.insertOne(data);
       res.send(result);
     });
-    // get data on userCollection
+    // get all data on userCollection
     app.get("/users", async (req, res) => {
       const cursor = userCollection.find();
       const result = await cursor.toArray();
+      res.send(result);
+    });
+    // get usercollection single data
+    app.get("/user/:id", async (req, res) => {
+      let id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await userCollection.findOne(query);
       res.send(result);
     });
     // get all coffe data from database
@@ -51,6 +58,7 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+
     // find single data from database
     app.get("/coffe/:id", async (req, res) => {
       let id = req.params.id;
